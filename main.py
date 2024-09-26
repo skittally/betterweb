@@ -6,7 +6,7 @@ class SimpleBrowser(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("Simple Browser")
+        self.title("betterWeb")
         self.geometry("800x600")
 
         navigation_frame = ttk.Frame(self)
@@ -28,7 +28,7 @@ class SimpleBrowser(tk.Tk):
         self.web_view = tk.Text(self, wrap=tk.WORD)
         self.web_view.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
 
-        self.status_bar = ttk.Label(self, text="Welcome to Simple Browser", relief=tk.SUNKEN, anchor=tk.W)
+        self.status_bar = ttk.Label(self, text="betterWeb", relief=tk.SUNKEN, anchor=tk.W)
         self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
 
     def go_back(self):
