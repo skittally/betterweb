@@ -1,7 +1,7 @@
 import requests
 
-# URL of the JSON file in your GitHub repository
-GITHUB_JSON_URL = 'https://raw.githubusercontent.com/skittally/betterweb/domain/domain.json'
+# URL of the raw JSON file in your GitHub repository
+GITHUB_JSON_URL = 'https://raw.githubusercontent.com/skittally/betterweb/master/domain/domain.json'
 
 def fetch_mappings():
     try:
@@ -10,6 +10,9 @@ def fetch_mappings():
         return response.json()        # Return the JSON data
     except requests.exceptions.RequestException as e:
         print(f"Error fetching mappings: {e}")
+        return {}
+    except ValueError as e:
+        print(f"Error parsing JSON: {e}")
         return {}
 
 def lookup_domain(domain):
