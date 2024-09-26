@@ -1,13 +1,22 @@
 import requests
+import json
+import os
 
-# URL of the raw JSON file in your GitHub repository
-GITHUB_JSON_URL = 'https://raw.githubusercontent.com/skittally/betterweb/master/domain/domain.json'
+def load_github_url():
+    config_path = 'bns-conf/bns.json'
+    if os.path.exists(config_path):
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+            return config.get("github_url")
+    else:
+        print("Configuration file not found.")
+        return None
 
-def fetch_mappings():
+def fetch_mappings(github_url):
     try:
-        response = requests.get(GITHUB_JSON_URL)
-        response.raise_for_status()  # Raise an error for bad responses
-        return response.json()        # Return the JSON data
+        response = requests.get(github_url)
+        response.raise_for_status()
+        return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Error fetching mappings: {e}")
         return {}
@@ -15,8 +24,8 @@ def fetch_mappings():
         print(f"Error parsing JSON: {e}")
         return {}
 
-def lookup_domain(domain):
-    mappings = fetch_mappings()
+def lookup_domain(domain, github_url):
+    mappings = fetch_mappings(github_url)
     ip_address = mappings.get(domain)
     
     if ip_address:
@@ -24,6 +33,11 @@ def lookup_domain(domain):
     else:
         print(f"Domain {domain} not found.")
 
+def main():
+	github_url = load_github_url()
+	if github_url:
+		domain_to_lookup = input("Enter the domain to look up: ")
+		lookup_domain(domain_to_lookup, github_url)
+
 if __name__ == "__main__":
-    domain_to_lookup = input("Enter the domain to look up: ")
-    lookup_domain(domain_to_lookup)
+	main()
