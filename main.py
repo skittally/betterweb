@@ -1,43 +1,58 @@
-import requests
-import json
-import os
+from bnsManager import lookup
+import tkinter as tk
+from tkinter import ttk
 
-def load_github_url():
-    config_path = 'bns-conf/bns.json'
-    if os.path.exists(config_path):
-        with open(config_path, 'r') as f:
-            config = json.load(f)
-            return config.get("github_url")
-    else:
-        print("Configuration file not found.")
-        return None
+class SimpleBrowser(tk.Tk):
+    def __init__(self):
+        super().__init__()
 
-def fetch_mappings(github_url):
-    try:
-        response = requests.get(github_url)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching mappings: {e}")
-        return {}
-    except ValueError as e:
-        print(f"Error parsing JSON: {e}")
-        return {}
+        self.title("Simple Browser")
+        self.geometry("800x600")
 
-def lookup_domain(domain, github_url):
-    mappings = fetch_mappings(github_url)
-    ip_address = mappings.get(domain)
-    
-    if ip_address:
-        print(f"IP Address for {domain}: {ip_address}")
-    else:
-        print(f"Domain {domain} not found.")
+        # Create a frame for the URL bar and buttons
+        navigation_frame = ttk.Frame(self)
+        navigation_frame.pack(pady=10, fill=tk.X)
 
-def main():
-	github_url = load_github_url()
-	if github_url:
-		domain_to_lookup = input("Enter the domain to look up: ")
-		lookup_domain(domain_to_lookup, github_url)
+        # URL bar
+        self.url_bar = ttk.Entry(navigation_frame, width=70)
+        self.url_bar.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
+        self.url_bar.bind("<Return>", self.load_url)  # Bind Enter key
+
+        # Navigation buttons
+        self.back_button = ttk.Button(navigation_frame, text="Back", command=self.go_back)
+        self.back_button.pack(side=tk.LEFT, padx=5)
+
+        self.forward_button = ttk.Button(navigation_frame, text="Forward", command=self.go_forward)
+        self.forward_button.pack(side=tk.LEFT, padx=5)
+
+        self.reload_button = ttk.Button(navigation_frame, text="Reload", command=self.reload)
+        self.reload_button.pack(side=tk.LEFT, padx=5)
+
+        # Web view (placeholder)
+        self.web_view = tk.Text(self, wrap=tk.WORD)
+        self.web_view.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
+
+        # Add a status bar
+        self.status_bar = ttk.Label(self, text="Welcome to Simple Browser", relief=tk.SUNKEN, anchor=tk.W)
+        self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
+
+    def go_back(self):
+        # Placeholder for back functionality
+        print("Back button pressed")
+
+    def go_forward(self):
+        # Placeholder for forward functionality
+        print("Forward button pressed")
+
+    def reload(self):
+        # Placeholder for reload functionality
+        print("Reload button pressed")
+
+    def load_url(self, event):
+        domain_to_lookup = self.url_bar.get()  # Get the URL from the entry
+        lookup(domain_to_lookup)
+        print(f"{domain_to_lookup} {ip_address}")  # Replace with actual loading functionality
 
 if __name__ == "__main__":
-	main()
+    app = SimpleBrowser()
+    app.mainloop()
